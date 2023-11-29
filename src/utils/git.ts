@@ -2,7 +2,7 @@ import { execa } from 'execa';
 import { readFileSync } from 'fs';
 import ignore, { Ignore } from 'ignore';
 
-import { outro, spinner } from '@clack/prompts';
+import { outro, spinner, intro } from '@clack/prompts';
 
 export const assertGitRepo = async () => {
   try {
@@ -82,27 +82,37 @@ export const gitAdd = async ({ files }: { files: string[] }) => {
 
 export const getDiff = async ({ files }: { files: string[] }) => {
   const lockFiles = files.filter(
-    (file) =>
-      file.includes('.lock') ||
-      file.includes('-lock.') ||
-      file.includes('.svg') ||
-      file.includes('.png') ||
-      file.includes('.jpg') ||
-      file.includes('.jpeg') ||
-      file.includes('.webp') ||
-      file.includes('.gif')
+      (file) =>
+          file.includes('.lock') ||
+          file.includes('-lock.') ||
+          file.includes('.svg') ||
+          file.includes('.png') ||
+          file.includes('.jpg') ||
+          file.includes('.jpeg') ||
+          file.includes('.webp') ||
+          file.includes('.gif') ||
+          file.includes('.csv')
   );
 
   if (lockFiles.length) {
     outro(
-      `Some files are excluded by default from 'git diff'. No commit messages are generated for this files:\n${lockFiles.join(
-        '\n'
-      )}`
+        `Some files are excluded by default from 'git diff'. No commit messages are generated for these files:\n${lockFiles.join(
+            '\n'
+        )}`
     );
   }
 
-  const filesWithoutLocks = files.filter(
-    (file) => !file.includes('.lock') && !file.includes('-lock.')
+  // Updated filter for filesWithoutLocks
+  const filesWithoutLocks = files.filter(file =>
+      !(file.includes('.lock') ||
+          file.includes('-lock.') ||
+          file.includes('.svg') ||
+          file.includes('.png') ||
+          file.includes('.jpg') ||
+          file.includes('.jpeg') ||
+          file.includes('.webp') ||
+          file.includes('.gif') ||
+          file.includes('.csv'))
   );
 
   const { stdout: diff } = await execa('git', [
@@ -114,3 +124,4 @@ export const getDiff = async ({ files }: { files: string[] }) => {
 
   return diff;
 };
+

@@ -28023,7 +28023,9 @@ var getConfig = () => {
       );
       config7[configKey] = validValue;
     } catch (error) {
-      ce(`Unknown '${configKey}' config option.`);
+      ce(
+        `'${configKey}' name is invalid, it should be either 'OCO_${configKey.toUpperCase()}' or it doesn't exist.`
+      );
       ce(
         `Manually fix the '.env' file or global '~/.opencommit' config file.`
       );

@@ -21601,7 +21601,9 @@ var getConfig = () => {
       );
       config8[configKey] = validValue;
     } catch (error) {
-      ce(`Unknown '${configKey}' config option.`);
+      ce(
+        `'${configKey}' name is invalid, it should be either 'OCO_${configKey.toUpperCase()}' or it doesn't exist.`
+      );
       ce(
         `Manually fix the '.env' file or global '~/.opencommit' config file.`
       );
@@ -22257,18 +22259,18 @@ var gitAdd = async ({ files }) => {
 };
 var getDiff = async ({ files }) => {
   const lockFiles = files.filter(
-    (file) => file.includes(".lock") || file.includes("-lock.") || file.includes(".svg") || file.includes(".png") || file.includes(".jpg") || file.includes(".jpeg") || file.includes(".webp") || file.includes(".gif") || file.includes(".csv")
+    (file) => file.includes(".lock") || file.includes("-lock.") || file.includes(".svg") || file.includes(".png") || file.includes(".jpg") || file.includes(".jpeg") || file.includes(".webp") || file.includes(".gif")
   );
   if (lockFiles.length) {
     ce(
-      `Some files are excluded by default from 'git diff'. No commit messages are generated for these files:
+      `Some files are excluded by default from 'git diff'. No commit messages are generated for this files:
 ${lockFiles.join(
         "\n"
       )}`
     );
   }
   const filesWithoutLocks = files.filter(
-    (file) => !(file.includes(".lock") || file.includes("-lock.") || file.includes(".svg") || file.includes(".png") || file.includes(".jpg") || file.includes(".jpeg") || file.includes(".webp") || file.includes(".gif") || file.includes(".csv"))
+    (file) => !file.includes(".lock") && !file.includes("-lock.")
   );
   const { stdout: diff } = await execa("git", [
     "diff",
