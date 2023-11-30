@@ -8,6 +8,7 @@ import { DEFAULT_MODEL_TOKEN_LIMIT, getConfig } from './commands/config';
 import { getMainCommitPrompt } from './prompts';
 import { mergeDiffs } from './utils/mergeDiffs';
 import { tokenCount } from './utils/tokenCount';
+import { outro }  from '@clack/prompts';
 
 const config = getConfig();
 
@@ -66,6 +67,10 @@ export const generateCommitMessageByDiff = async (
     }
 
     const messages = await generateCommitMessageChatCompletionPrompt(diff);
+
+    messages.forEach(message => {
+      outro(message.content);
+    });
 
     const commitMessage = await api.generateCommitMessage(messages);
 

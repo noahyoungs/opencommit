@@ -22111,6 +22111,9 @@ var generateCommitMessageByDiff = async (diff) => {
       return commitMessages.join("\n\n");
     }
     const messages = await generateCommitMessageChatCompletionPrompt(diff);
+    messages.forEach((message) => {
+      ce(message.content);
+    });
     const commitMessage = await api.generateCommitMessage(messages);
     if (!commitMessage)
       throw new Error("EMPTY_MESSAGE" /* emptyMessage */);
